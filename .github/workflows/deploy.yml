@@ -21,6 +21,10 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: frontend  # Đường dẫn đến thư mục frontend
+        
+      - name: Check installed dependencies
+        run: npm list
+        working-directory: frontend
 
       - name: Build project
         run: npm run build
