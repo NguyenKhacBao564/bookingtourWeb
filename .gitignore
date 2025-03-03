@@ -11,7 +11,8 @@ frontend/.next/
 frontend/out/
 # Ignore node_modules
 frontend/node_modules/
-
+node_modules/
+.cache/
 # Bỏ qua các file môi trường (Chứa thông tin nhạy cảm)
 .env
 .env.local
@@ -74,6 +75,4 @@ debug.log
 .idea/
 *.iml
 
-# Nếu dùng Linux
-*~
 
