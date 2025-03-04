@@ -45,9 +45,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            if [ -f "/home/ec2-user/frontend.tar" ]; then
-              sudo rm -f /home/ec2-user/frontend.tar
-            fi
+              sudo rm -rf /home/ec2-user/frontend.tar
+
 
       # Copy Docker image lên EC2
       - name: Copy Docker image to EC2
