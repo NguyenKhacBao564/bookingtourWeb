@@ -173,8 +173,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /var/www/html/*
-            sudo cp -r /home/ec2-user/frontend/build/* /var/www/html/
+            sudo systemctl restart httpd
+            sudo rm -rf /var/cache/httpd/*
             sudo chown -R apache:apache /var/www/html
             sudo chmod -R 755 /var/www/html
             sudo systemctl restart httpd
