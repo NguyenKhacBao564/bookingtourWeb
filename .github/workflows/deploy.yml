@@ -21,16 +21,18 @@ jobs:
       - name: Save Docker image
         run: docker save -o frontend.tar myapp-frontend:latest
 
-        #Kiểm tra file frontend.tar có hợp lí không
+      # Kiểm tra file frontend.tar có hợp lệ không
       - name: Debug permissions
         run: ls -lah frontend.tar
 
       - name: Verify Docker image exists
         run: ls -lh frontend.tar
 
-        #Sửa quyền của frontend.tar
-      - name: Fix permissions 2
-        run: chmod 644 frontend.tar
+      # Đảm bảo frontend.tar có quyền đúng trước khi copy
+      - name: Fix permissions before SCP
+        run: chmod 755 frontend.tar
+
+      # Xóa file frontend.tar cũ trên EC2 trước khi copy
       - name: Cleanup old Docker image on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -41,41 +43,28 @@ jobs:
             if [ -f "/home/ec2-user/frontend.tar" ]; then
               sudo rm -f /home/ec2-user/frontend.tar
             fi
-      - name: Fix permissions on EC2
-        uses: appleboy/ssh-action@master
-        with:
-             host: 54.215.38.215
-             username: ec2-user
-             key: ${{ secrets.SSH_PRIVATE_KEY }}
-             script: |
-               sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
-               sudo chmod 644 /home/ec2-user/frontend.tar
+
+      # Copy Docker image lên EC2
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@master
         with:
-          host: 54.215.38.215   # Địa chỉ IP của EC2
+          host: 54.215.38.215
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend.tar"
           target: "/home/ec2-user/frontend.tar"
-          script: "sudo chmod 755 /home/ec2-user/frontend.tar"
-      # - name: Fix permissions on EC2
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: 54.215.38.215
-      #     username: ec2-user
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     script: |
-      #       sudo chmod 644 /home/ec2-user/frontend.tar
-      # - name: Fix permissions on EC2
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #    host: 54.215.38.215
-      #    username: ec2-user
-      #    key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #    script: |
-      #      sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
-      #      sudo chmod 644 /home/ec2-user/frontend.tar
+
+      # Cấp quyền truy cập file frontend.tar cho Docker trên EC2
+      - name: Fix permissions on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.215.38.215
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
+            sudo chmod 644 /home/ec2-user/frontend.tar
+
       # Kiểm tra xem file frontend.tar có tồn tại trên EC2 hay không
       - name: Verify frontend.tar on EC2
         uses: appleboy/ssh-action@master
@@ -87,6 +76,7 @@ jobs:
             ls -lh /home/ec2-user/frontend.tar
             file /home/ec2-user/frontend.tar
 
+      # Load và chạy container trên EC2
       - name: Load and run Docker container on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -94,7 +84,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker load < /home/ec2-user/frontend.tar
+            sudo docker load -i /home/ec2-user/frontend.tar
             docker stop frontend || true
             docker rm frontend || true
             docker run -d -p 3000:3000 --name frontend myapp-frontend:latest
