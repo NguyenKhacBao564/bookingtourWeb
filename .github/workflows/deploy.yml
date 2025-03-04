@@ -32,7 +32,7 @@ jobs:
 
         #Sửa quyền của frontend.tar
       - name: Fix permissions 2
-        run: chmod 644 /home/ec2-user/frontend.tar
+        run: sudo chmod 644 /home/ec2-user/frontend.tar
       - name: Cleanup old Docker image on EC2
         uses: appleboy/ssh-action@master
         with:
