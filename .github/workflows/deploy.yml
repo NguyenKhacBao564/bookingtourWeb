@@ -20,7 +20,11 @@ jobs:
 
       - name: Save Docker image
         run: docker save -o frontend.tar myapp-frontend:latest
-
+        
+        #Kiểm tra file frontend.tar có hợp lí không
+      - name: Debug permissions
+        run: ls -lah frontend.tar
+      
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@master
         with:
