@@ -1,27 +1,24 @@
-# Sử dụng image Node.js nhẹ
-FROM node:18-alpine
+# Sử dụng image Node.js chính thức
+FROM node:18-alpine 
 
-# Đặt thư mục làm việc
+# Thiết lập thư mục làm việc
 WORKDIR /app
 
-# Copy file package.json và package-lock.json trước để cache dependencies
-COPY package.json package-lock.json ./
+# Copy package.json và package-lock.json
+COPY package*.json ./
 
 # Cài đặt dependencies
-RUN npm ci
+RUN npm install
 
-# Copy toàn bộ source code vào container
+# Copy toàn bộ mã nguồn vào container
 COPY . .
 
-# Build project
+# Build ứng dụng
 RUN npm run build
 
-# Sử dụng Nginx để serve static files
-FROM nginx:alpine
-COPY --from=0 /app/build /usr/share/nginx/html
+# Sử dụng một web server nhẹ để phục vụ ứng dụng (thay vì chạy npm start)
+RUN npm install -g serve
+CMD ["serve", "-s", "build", "-l", "3000"]
 
-# Expose port 3000
+# Expose cổng 3000
 EXPOSE 3000
-
-# Khởi động Nginx
-CMD ["nginx", "-g", "daemon off;"]
