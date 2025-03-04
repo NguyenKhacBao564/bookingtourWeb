@@ -41,6 +41,15 @@ jobs:
             if [ -f "/home/ec2-user/frontend.tar" ]; then
               sudo rm -f /home/ec2-user/frontend.tar
             fi
+      - name: Fix permissions on EC2
+        uses: appleboy/ssh-action@master
+        with:
+             host: 54.215.38.215
+             username: ec2-user
+             key: ${{ secrets.SSH_PRIVATE_KEY }}
+             script: |
+               sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
+               sudo chmod 644 /home/ec2-user/frontend.tar
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@master
         with:
@@ -58,15 +67,15 @@ jobs:
       #     key: ${{ secrets.SSH_PRIVATE_KEY }}
       #     script: |
       #       sudo chmod 644 /home/ec2-user/frontend.tar
-      - name: Fix permissions on EC2
-        uses: appleboy/ssh-action@master
-        with:
-         host: 54.215.38.215
-         username: ec2-user
-         key: ${{ secrets.SSH_PRIVATE_KEY }}
-         script: |
-           sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
-           sudo chmod 644 /home/ec2-user/frontend.tar
+      # - name: Fix permissions on EC2
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #    host: 54.215.38.215
+      #    username: ec2-user
+      #    key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #    script: |
+      #      sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
+      #      sudo chmod 644 /home/ec2-user/frontend.tar
       # Kiểm tra xem file frontend.tar có tồn tại trên EC2 hay không
       - name: Verify frontend.tar on EC2
         uses: appleboy/ssh-action@master
