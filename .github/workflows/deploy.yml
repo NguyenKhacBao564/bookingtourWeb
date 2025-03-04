@@ -12,13 +12,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Build frontend static files
-        run: |
-          cd frontend
-          npm install
-          npm run build
-          ls -lah build/
+      #Build frontend trước khi build docker image là không cần thiết
+      # - name: Build frontend static files
+      #   run: |
+      #     cd frontend
+      #     npm install
+      #     npm run build
+      #     ls -lah build/
 
       - name: Build Docker image
         run: |
@@ -74,7 +74,18 @@ jobs:
           script: |
             ls -lh /home/ec2-user/frontend.tar
             file /home/ec2-user/frontend.tar
-
+            - name: Build frontend on EC2
+            uses: appleboy/ssh-action@master
+            with:
+              host: 54.215.38.215
+              username: ec2-user
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              script: |
+                cd /home/ec2-user/frontend
+                npm install
+                npm run build
+                ls -lah build/
+          
       # Cấp quyền truy cập file frontend.tar cho Docker trên EC2
       - name: Auto Fix Permissions on EC2
         uses: appleboy/ssh-action@master
@@ -109,7 +120,7 @@ jobs:
             docker stop frontend || true
             docker rm frontend || true
             docker run -d -p 3000:3000 --name frontend myapp-frontend:latest
-            
+
       - name: Copy frontend build to EC2
         uses: appleboy/scp-action@master
         with:
