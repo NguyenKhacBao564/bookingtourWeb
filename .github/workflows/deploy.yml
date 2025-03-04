@@ -18,8 +18,13 @@ jobs:
           cd frontend
           docker build -t myapp-frontend:latest .
 
+      # - name: Save Docker image
+      #   run: docker save -o frontend.tar myapp-frontend:latest
       - name: Save Docker image
-        run: docker save -o frontend.tar myapp-frontend:latest
+        run: |
+            docker save myapp-frontend:latest > frontend.tar
+            ls -lh frontend.tar  # Kiểm tra dung lượng file
+            file frontend.tar    # Kiểm tra loại file
 
       # Kiểm tra file frontend.tar có hợp lệ không
       - name: Debug permissions
