@@ -56,7 +56,16 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend.tar"
-          target: "/home/ec2-user/frontend.tar"
+          target: "/home/ec2-user/"
+      - name: Verify frontend.tar on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.215.38.215
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            ls -lh /home/ec2-user/frontend.tar
+            file /home/ec2-user/frontend.tar
 
       # Cấp quyền truy cập file frontend.tar cho Docker trên EC2
       - name: Auto Fix Permissions on EC2
