@@ -74,6 +74,19 @@ jobs:
           script: |
             ls -lh /home/ec2-user/frontend.tar
             file /home/ec2-user/frontend.tar
+
+      - name: Install Node.js & npm on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.215.38.215
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+            sudo yum install -y nodejs
+            node -v
+            npm -v
+
       - name: Build frontend on EC2
         uses: appleboy/ssh-action@master
         with:
