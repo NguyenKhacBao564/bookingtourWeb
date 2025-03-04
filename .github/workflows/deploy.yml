@@ -19,7 +19,7 @@ jobs:
           docker build -t myapp-frontend:latest .
 
       - name: Save Docker image
-        run: docker save myapp-frontend:latest > frontend.tar
+        run: docker save -o frontend.tar myapp-frontend:latest
 
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@master
