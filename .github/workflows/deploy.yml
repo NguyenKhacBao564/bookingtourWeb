@@ -27,8 +27,8 @@ jobs:
 
       - name: Verify Docker image exists
         run: ls -lh frontend.tar
-      # - name: Fix permissions 1
-      #   run: sudo chmod 755 /home/ec2-user/frontend.tar
+      - name: Fix permissions 1
+        run: sudo chmod 755 /home/ec2-user/frontend.tar
 
         #Sửa quyền của frontend.tar
       - name: Fix permissions 2
