@@ -31,7 +31,16 @@ jobs:
         #Sửa quyền của frontend.tar
       - name: Fix permissions
         run: sudo chmod 644 frontend.tar
-
+      - name: Cleanup old Docker image on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.215.38.215
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            if [ -f "/home/ec2-user/frontend.tar" ]; then
+              sudo rm -f /home/ec2-user/frontend.tar
+            fi
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@master
         with:
