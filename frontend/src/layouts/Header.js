@@ -7,7 +7,7 @@ function Header(props) {
         <div className='header'>
             <Navbar/>
             <div className="footer-content">
-                <h1>Duy buồi không to</h1>
+                <h1>Duy buồi to vãi lều</h1>
                 <p>Discover your next adventure with ease – book unforgettable tours and travel experiences tailored just for you!</p>
                 <div className="videoArea">
                     <div className="circle-button">
