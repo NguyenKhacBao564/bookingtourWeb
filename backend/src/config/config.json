@@ -1,0 +1,14 @@
+{
+    "database": {
+      "user": "sa",
+      "password": "YourStrong!Passw0rd",
+      "server": "localhost",
+      "port": 1433,
+      "database": "tourguidetest1",
+      "options": {
+        "encrypt": false,
+        "trustServerCertificate": true
+      }
+    }
+  }
+  

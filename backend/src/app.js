@@ -1,15 +1,26 @@
+require('dotenv').config();
+
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+// Import routes
+const authRoutes = require('./features/auth/routes');
+const tourRoutes = require('./features/tours/routes');
+
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(cors());
+app.use(bodyParser.json());
 
-// Middleware ví dụ
-app.use(express.json());
+// Mount routes
+app.use('/api/auth', authRoutes);
+// app.use('/api/tours', tourRoutes);
 
-// Route mẫu
 app.get('/', (req, res) => {
-  res.send('Hello from Backend!');
+  res.send('Hello from backend');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log('Server running on port', PORT));
+
+

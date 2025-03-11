@@ -1,221 +1,58 @@
-name: Deploy Frontend to EC2
+name: Deploy Fullstack to EC2
 
 on:
   push:
     branches:
-      - main  # Chạy khi có thay đổi trên nhánh main
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#       #Build frontend trước khi build docker image là không cần thiết
-#       # - name: Build frontend static files
-#       #   run: |
-#       #     cd frontend
-#       #     npm install
-#       #     npm run build
-#       #     ls -lah build/
-
-#       - name: Build Docker image
-#         run: |
-#           cd frontend
-#           docker build -t myapp-frontend:latest .
-
-#       # - name: Save Docker image
-#       #   run: docker save -o frontend.tar myapp-frontend:latest
-#       - name: Save Docker image
-#         run: |
-#             docker save myapp-frontend:latest > frontend.tar
-#             ls -lh frontend.tar  # Kiểm tra dung lượng file
-#             file frontend.tar    # Kiểm tra loại file
-
-#       # Kiểm tra file frontend.tar có hợp lệ không
-#       - name: Debug permissions
-#         run: ls -lah frontend.tar
-
-#       - name: Verify Docker image exists
-#         run: ls -lh frontend.tar
-
-#       # Đảm bảo frontend.tar có quyền đúng trước khi copy
-#       - name: Fix permissions before SCP
-#         run: chmod 755 frontend.tar
-
-#       # Xóa file frontend.tar cũ trên EC2 trước khi copy
-#       - name: Cleanup old Docker image on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#               sudo rm -rf /home/ec2-user/frontend.tar
-
-
-#       # Copy Docker image lên EC2
-#       - name: Copy Docker image to EC2
-#         uses: appleboy/scp-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           source: "frontend.tar"
-#           target: "/home/ec2-user/"
-
-#       - name: Verify frontend.tar on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             ls -lh /home/ec2-user/frontend.tar
-#             file /home/ec2-user/frontend.tar
-
-#       - name: Install Node.js & npm on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-#             sudo yum install -y nodejs
-#             node -v
-#             npm -v
-
-#       - name: Build frontend on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#               host: 54.215.38.215
-#               username: ec2-user
-#               key: ${{ secrets.SSH_PRIVATE_KEY }}
-#               script: |
-#                 cd /home/ec2-user/frontend
-#                 npm install
-#                 npm run build
-#                 ls -lah build/
-          
-#       # Cấp quyền truy cập file frontend.tar cho Docker trên EC2
-#       - name: Auto Fix Permissions on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             sudo chown ec2-user:ec2-user /home/ec2-user/frontend.tar
-#             sudo chmod 755 /home/ec2-user/frontend.tar  # Phân quyền đúng
-
-#       # Kiểm tra xem file frontend.tar có tồn tại trên EC2 hay không
-#       - name: Verify frontend.tar on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             ls -lh /home/ec2-user/frontend.tar
-#             file /home/ec2-user/frontend.tar
-
-#       # Load và chạy container trên EC2
-#       - name: Load and run Docker container on EC2
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             sudo docker load -i /home/ec2-user/frontend.tar
-#             docker stop frontend || true
-#             docker rm frontend || true
-#             docker run -d -p 3000:3000 --name frontend myapp-frontend:latest
-
-#       # - name: Copy frontend build to EC2
-#       #   uses: appleboy/scp-action@master
-#       #   with:
-#       #     host: 54.215.38.215
-#       #     username: ec2-user
-#       #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-#       #     source: "frontend/build/*"
-#       #     target: "/var/www/html/"
-
-#       - name: Copy frontend source code to EC2
-#         uses: appleboy/scp-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           source: "frontend/"
-#           target: "/home/ec2-user/"
-
-
-#       # - name: Restart Apache server on EC2
-#       #   uses: appleboy/ssh-action@master
-#       #   with:
-#       #     host: 54.215.38.215
-#       #     username: ec2-user
-#       #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-#       #     script: |
-#       #       sudo yum install -y httpd
-#       #       sudo systemctl enable httpd
-#       #       sudo systemctl restart httpd
-#       #       sudo chown -R apache:apache /var/www/html
-#       #       sudo chmod -R 755 /var/www/html
-
-#       - name: Deploy frontend to Apache server
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: 54.215.38.215
-#           username: ec2-user
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             sudo systemctl restart httpd
-#             sudo rm -rf /var/cache/httpd/*
-#             sudo chown -R apache:apache /var/www/html
-#             sudo chmod -R 755 /var/www/html
-#             sudo systemctl restart httpd
-#             sudo rm -rf /var/cache/httpd/*
-
+      - main  # Mỗi khi push lên nhánh main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step này: build trực tiếp trên server => Cần copy source code trước
-      - name: Copy frontend source code to EC2
+      # 2. Copy FRONTEND source code lên EC2
+      - name: Copy FRONTEND source code to EC2
         uses: appleboy/scp-action@master
         with:
-          host: 54.215.38.215
-          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend/"
           target: "/home/ec2-user/"
 
+      # 3. Copy BACKEND source code lên EC2
+      - name: Copy BACKEND source code to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "backend/"
+          target: "/home/ec2-user/"
+
+      # 4. Cài Node.js trên EC2 (nếu chưa cài)
       - name: Install Node.js & npm on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: 54.215.38.215
-          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Cài Node.js 18.x
             curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
             sudo yum install -y nodejs
             node -v
             npm -v
 
-      # Build ở server
+      # 5. Build FRONTEND trên EC2
       - name: Build frontend on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: 54.215.38.215
-          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ec2-user/frontend
@@ -223,17 +60,39 @@ jobs:
             npm run build
             ls -lah build/
 
-      # Copy file build sang /var/www/html
+      # 6. Deploy FRONTEND build sang /var/www/html (hoặc folder tuỳ ý)
       - name: Deploy build to Apache
         uses: appleboy/ssh-action@master
         with:
-          host: 54.215.38.215
-          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /var/www/html/* 
+            sudo rm -rf /var/www/html/*
             sudo cp -r /home/ec2-user/frontend/build/* /var/www/html/
-            sudo systemctl restart httpd
-            # Cấp quyền
             sudo chown -R apache:apache /var/www/html
             sudo chmod -R 755 /var/www/html
+            sudo systemctl restart httpd
+
+      # 7. Cài đặt Backend dependencies & run
+      - name: Deploy backend on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ec2-user/backend
+            npm install
+
+            # Bạn có thể build nếu có step build (TypeScript, Babel, v.v.), ví dụ:
+            # npm run build
+
+            # Dùng pm2 để chạy server (đảm bảo pm2 đã được cài)
+            sudo npm install -g pm2
+            pm2 stop my-backend || true
+            pm2 delete my-backend || true
+            pm2 start ./src/app.js --name my-backend --watch
+
+            # Kiểm tra pm2 status
+            pm2 status

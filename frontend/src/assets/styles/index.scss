@@ -16,7 +16,7 @@ html{
 body {
   margin: 0;
   padding: 0;
-  height: 300vh;
+  // height: 300vh;
   position: relative;
   font-family: 'Roboto', sans-serif;
   overflow-x: hidden;
@@ -401,14 +401,14 @@ a{
 
 .province-detail{
   display: flex;
+  height: fit-content;
   position: relative;
   flex-direction: column;
   align-items: center;
-  width: 90%;
+  width: 100%;
   max-width: 1500px;
   margin: 0 auto;
   margin-top: 50px;
-  
 }
 
 .province-img{
@@ -446,11 +446,12 @@ a{
 .province-info{
   background-color: #F9FDFF;
   border-radius: 5px;
-  position: absolute;
-  width: 75%;
-  bottom: -100px;
+  z-index: 1000;
+  width: 80%;
+  margin-top: -120px;
+  // bottom: -100px;
   display: flex;
-  padding: 20px;
+  padding: 50px;
   box-shadow: 0px 1px 20px 1px rgba(88, 88, 88, 0.178)
 }
 
@@ -479,96 +480,132 @@ a{
 
 
 .tour-card {
-  width: 350px;
+  width: 300px;
+  // height: 450px;
+  padding-bottom: 5px;
   /* margin-top: 200px; */
   background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: left;
   font-size: 16px;
   font-family: Arial, sans-serif;
-}
+  .tour-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    padding: 10px;
+  }
 
-.tour-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.tour-info {
-  padding: 15px;
-}
-
-.tour-info h3 {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.tour-details {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 14px;
-}
-
-.tour-details p {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  margin: 5px 0;
-}
-
-.tour-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
-  
-}
-
-
-.tour-price-container p{
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  color: #000000;
+  .tour-info {
+    padding: 0 10px;
+    h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      line-height: 1.5; /* Điều chỉnh khoảng cách dòng */
+      max-height: calc(1.3em * 5); /* Giới hạn chiều cao cho 2 dòng */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .tour-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.5rem;
+    padding: 0; /* Loại bỏ padding mặc định của <ul> */
+    margin: 0; /* Loại bỏ margin mặc định */
+    li{
+      display: inline-block;
+      width: 100%; 
+    }
+    p {
+      display: flex;
+      font-size: 0.8rem;
+      gap: 8px;
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+  .tour-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #ddd;
+    .tour-price-container{
+      flex:1;  //Chiếm 50% không gian
+      p{
+        font-size: 0.8rem;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        color: #646464;
+      }
+      #price{
+        font-size: clamp(min(0.8rem, 1rem), 16px, max(90vw, 55rem));
+        width: 100%;
+        box-sizing: content-box;
+        font-weight: bold;
+        color: #E01600;
+        font-family: 'Mulish', sans-serif;
+      }
+    }
+  }
  
 }
 
-#price{
-  font-size: 20px;
-  width: 100%;
-  font-weight: bold;
-  color: #E01600;
-  padding: 10px;
-}
-
 .book-btn {
-  background-color: #5f9274;
+  background-color: #FC7948;
   color: white;
-  width: 100px;
-  padding: 15px 20px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  padding: 2% 5%;
   border: none;
-  border-radius: 15px;
+  border-radius: 5px;
   cursor: pointer;
   box-sizing: content-box;
 }
 
 .book-btn:hover {
-  background-color: #4a7a5a;
+  background-color: #fc6934;
 }
 
 .tourlist{
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 20px;
   margin-top: 150px;
   flex-wrap: wrap;
 }
 
 
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding-right: 35px; /* Chừa chỗ cho icon */
+}
+
+.icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
+
+.tourlist_Label{
+  margin-top: 50px;
+  float: left;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #272727;
+}

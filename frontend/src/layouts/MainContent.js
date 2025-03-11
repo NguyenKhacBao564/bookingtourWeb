@@ -1,5 +1,6 @@
 
     import React, { useState } from 'react';
+    import Carousel from 'react-bootstrap/Carousel';
     // import AOS from 'aos';
     // import 'aos/dist/aos.css'; // You can also use <link> for styles
     import Tourlist from './tourlist';
