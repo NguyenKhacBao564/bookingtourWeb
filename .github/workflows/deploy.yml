@@ -76,10 +76,10 @@ jobs:
       - name: Deploy build to Nginx
         uses: appleboy/ssh-action@master
         with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
+         host: ${{ secrets.EC2_HOST }}
+         username: ${{ secrets.EC2_USER }}
+         key: ${{ secrets.SSH_PRIVATE_KEY }}
+         script: |
           sudo rm -rf /usr/share/nginx/html/*
           sudo cp -r /home/ec2-user/frontend/build/* /usr/share/nginx/html/
           sudo chown -R nginx:nginx /usr/share/nginx/html
