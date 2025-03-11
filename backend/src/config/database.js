@@ -6,7 +6,7 @@ const sql = require('mssql');
 const dbConfig = {
   user: process.env.DB_USER || 'sa',
   password: process.env.DB_PASS || "nguyenKhacBao123",
-  server: process.env.DB_HOST || '100.90.83.88',
+  server: process.env.DB_HOST || 'localhost',
   port: 1433,
   database: process.env.DB_NAME || 'master',
   options: {

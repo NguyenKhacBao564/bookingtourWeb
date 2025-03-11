@@ -42,6 +42,7 @@ backend/.env.local
 backend/.env.development
 backend/.env.production
 backend/.env.test
+backend/src/config/.env
 
 # Bỏ qua lockfile (Chỉ giữ lại một loại nếu cần)
 package-lock.json
