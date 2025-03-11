@@ -27,8 +27,8 @@ jobs:
       - name: Copy BACKEND source code to EC2
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 54.215.38.215
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "backend/"
           target: "/home/ec2-user/"
@@ -37,8 +37,8 @@ jobs:
       - name: Install Node.js & npm on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 54.215.38.215
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Cài Node.js 18.x
@@ -51,8 +51,8 @@ jobs:
       - name: Build frontend on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 54.215.38.215
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ec2-user/frontend
@@ -76,22 +76,22 @@ jobs:
       - name: Deploy build to Nginx
         uses: appleboy/ssh-action@master
         with:
-         host: ${{ secrets.EC2_HOST }}
-         username: ${{ secrets.EC2_USER }}
-         key: ${{ secrets.SSH_PRIVATE_KEY }}
-         script: |
-          sudo rm -rf /usr/share/nginx/html/*
-          sudo cp -r /home/ec2-user/frontend/build/* /usr/share/nginx/html/
-          sudo chown -R nginx:nginx /usr/share/nginx/html
-          sudo chmod -R 755 /usr/share/nginx/html
-          sudo systemctl restart nginx
+          host: 54.215.38.215
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r /home/ec2-user/frontend/build/* /usr/share/nginx/html/
+            sudo chown -R nginx:nginx /usr/share/nginx/html
+            sudo chmod -R 755 /usr/share/nginx/html
+            sudo systemctl restart nginx
     
       # 7. Cài đặt Backend dependencies & run
       - name: Deploy backend on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 54.215.38.215
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ec2-user/backend
